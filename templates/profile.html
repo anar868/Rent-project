@@ -1,0 +1,76 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@300;400;700&family=Roboto:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'rentApp1/profile.css' %}">
+    <link rel="stylesheet" href="{% static 'rentApp1/jquery-ui.min.css' %}">
+    
+</head>
+
+<body>
+    <header>
+        <nav>
+            <div class="nav-container">
+                <div class="nav-container">
+                    <div id="hamburger" class="hamburger">
+                        <div class="hamburger-cont">
+                            <i class="ham-line ham-line-1"></i>
+                            <i class="ham-line ham-line-2"></i>
+                        </div>
+                        <p class="ham-link">menu</p>
+                    </div>
+                    <a id="logo" href="{% url 'home' %}">RENTALHOUSE</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <ul class="nav-menu" id="nav-menu">
+        <li class="img-list">
+            <div class="img-list-p">
+                <img class="user-pfp" src="{% if request.user.pfp %}{{ request.user.pfp.url }}{% else %}{% static 'rentApp1/media/logicon.png' %}{% endif %}" />
+                <div class="form-all">
+                    <form class="pfp-form" method="POST" action="{% url 'update_img' %}"  enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="pfp-button pfp-btn">
+                            <p class="pfp-text">{% if request.user.pfp %}Yenilə{% else %}Şəkil qoy{% endif %}</p> 
+                        </div>
+                        <input type="file" name="pfp" accept="image/*" id="id_pfp">
+                        <input type="hidden" name="pfpwhether" value="1" class="pfp-in">
+                        {% if request.user.pfp %}
+                            <div class="clear-pfp pfp-btn">
+                                <p class="pfp-text">Sil</p> 
+                            </div>
+                        {% endif %}
+                        <input type="button" class="pfp-input" style="pointer-events: none;opacity: 0;" value="">
+                    </form>
+                </div>
+            </div>
+            <p class="usrnm">{{request.user.username}}</p>
+        </li>
+        {% if request.user.is_superuser %}<li><a href="{% url 'admin_verify' %}">Admin paneli</a></li>{% endif %}
+        <li><a href="{% url 'update_user' %}">Hesab məlumatları</a></li>
+        <li><a href="{% url 'user_waiting_ads' %}">Elanlarınız</a></li>
+        <li><a href="{% url 'user_waiting_comments' %}">Şərhləriniz</a></li>
+        <li><a href="{% url 'logout' %}">Çıxış</a></li>
+    </ul>
+    <section id="profile-section">
+        {% block body %} {% endblock %}
+    </section>
+
+    <script src="{% static 'rentApp1/jquery.min.js' %}"></script>
+    <script src="{% static 'rentApp1/jquery-ui.min.js' %}"></script>
+    <script src="{% static 'rentApp1/jquery.mask.min.js' %}"></script>
+    
+    <script src="{% static 'rentApp1/profile.js' %}"></script>
+
+    
+    <script src="{% static 'rentApp1/admin_verify.js' %}"></script>
+   
+   
+
+    
+</body>
+</html>

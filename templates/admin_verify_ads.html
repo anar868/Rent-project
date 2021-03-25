@@ -1,0 +1,83 @@
+{% extends 'profile.html' %}
+{% block body %}
+{% load static %}
+
+    
+<link rel="stylesheet" href="{% static 'rentApp1/admin_verify.css' %}">
+
+<section class="adVerify-section">
+    <div class="adVerify-section-container">
+        <div class="adVerify-section-container-2">
+            <h1 class="adVerify-section-title">Elanlar</h1>
+            <form method="GET" class="adVerify-search-box-container">
+                <input type="text" name="q" class="adVerify-search-box" placeholder="Axtar..."> 
+                <button type="submit" class="adVerify-search-icon-box">
+                    <i class="adVerify-search-icon">
+                        <i class="adVerify-search-icon-before"></i>
+                    </i>
+                </button>
+            </form>
+        </div>
+        <div class="adVerify-menu-container">
+            <!-- <a href="{% url 'admin_verify_ads' %}" class="adVerify-verify {% if active == 'verify' %}active{% endif %}">Gözlənilən</a>
+            <a href="{% url 'admin_verified_ads' %}" class="adVerify-verified {% if active == 'verified' %}active{% endif %}">Təsdiqlənmiş</a>
+            <a href="{% url 'admin_deleted_ads' %}" class="adVerify-deleted {% if active == 'deleted' %}active{% endif %}">Deaktiv</a>
+            <a href="{% url 'admin_ads_all' %}" class="adVerify-all {% if active == 'all' %}active{% endif %}">Bütün</a>
+            -->
+            <select name="" id="" onchange="location = this.value;">
+                <option value="verify"  {% if active == 'verify' %}selected{% endif %}><a href="{% url 'admin_verify_ads' %}">Gözlənilən</a></option>
+                <option value="verified" {% if active == 'verified' %}selected{% endif %}><a href="{% url 'admin_verified_ads' %}">Təsdiqlənmiş</a></option>
+                <option value="deleted" {% if active == 'deleted' %}selected{% endif %}><a href="{% url 'admin_deleted_ads' %}" class="adVerify-deleted ">Deaktiv</a></option>
+                <option value="all" {% if active == 'all' %}selected{% endif %}><a href="{% url 'admin_ads_all' %}" class="adVerify-all">Bütün</a></option>
+            </select>
+        </div>
+    </div>
+    <div class="adVerify-container">
+        {% if message %}
+            <p class="ad-not-found">{{message}}</p>
+        {% endif %}
+        {% for post in elanlar %}
+        <div class="adVerify-ad-container">
+            <a href="/profile/admin/ads/{{post.id}}" class="adVerify-img-container">
+                {% for image in post.image_album.image_set.all %}
+                <img class="ad-img" src="{{ image.image.url }}"/> 
+            {% endfor %}
+            </a>
+            <a href="/profile/admin/ads/{{post.id}}" class="adVerify-content-container">
+                <h3 class="adVerify-ad-price"><span>№:{{post.id}}&nbsp; &nbsp;{{post.city}} {{post.price}}<span class="adVerify-ad-price-tag"> AZN{% if post.isRent == "sale" %}{% else %}<span class="adVerify-ad-price_for">/{{ post.get_isRent_display }}{% endif %}{% if post.isRent != 'sale' %} kirayə{% endif %}</span>&nbsp;{{post.get_isFlat_display}}</span></span><small>{{post.updated_at}}</small></h3>
+                <p class="adVerify-ad-title">{{post.title}}</p>
+                <p class="adVerify-ad-address">{{post.address}}<span>{{post.owner}}</span></p>
+            </a>
+            <form method="POST" class="adVerify-buttons-container">
+                {% csrf_token %}
+                <input type="hidden" name="post_id" value="{{post.id}}">
+                {% if not post.verified and post.not_accepted %}
+                <input type="submit" name="verify" value="Bərpa et" class="adVerify-button adVerify-verify-button">
+                <input type="submit" name="delete" value="Sil" class="adVerify-button adVerify-delete-button">
+                {% endif %}
+                {% if post.verified and not post.not_accepted %}
+                <input type="submit" name="cancel" value="Deaktiv et" class="adVerify-button adVerify-delete-button">
+                <input type="submit" name="delete" value="Sil" class="adVerify-button adVerify-delete-button">
+                {% endif %}
+                {% if not post.verified and not post.not_accepted %}
+                <input type="submit" name="verify" value="Təsdiqlə" class="adVerify-button adVerify-verify-button">
+                <input type="submit" name="cancel" value="Deaktiv et" class="adVerify-button adVerify-delete-button">
+                {% endif %}
+            </form> 
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="adVerify-OK-section">
+    <div class="adVerify-OK-container">
+        <p class="adVerify-OK-container-text"></p>
+        <div class="adVerify-OK-buttons-container">
+            
+        </div>
+    </div>
+</section>
+
+
+
+{% endblock %}

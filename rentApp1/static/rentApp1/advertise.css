@@ -1,0 +1,181 @@
+
+
+.advertise-form-section {
+    position: relative;
+    padding-top: 60px;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-image: url('media/log.jpg');
+    background-size: cover;
+}
+
+.a-form-container  {
+    text-align: center;
+    backdrop-filter: blur(5px);
+    height: 590px;
+    padding-top: 170px;
+    background-color: var(--darkmode-containerBg);
+    border-radius: 10px;
+    width: 830px;
+    overflow-x: auto;
+}
+
+.a-login-container a    {
+    display: block;
+    color: var(--active-color);
+    margin: 5px 0;
+}
+
+.a-login-container a:hover    {
+    text-decoration: underline;
+}
+
+h1  {
+    margin-bottom: 20px;
+}
+
+
+/* adform section */
+
+.adForm-section {
+    background-image: url('https://wallpaperaccess.com/full/1155011.jpg');
+    background-size: cover;
+}
+
+.adForm-container    {
+    background-color: var(--darkmode-containerBg);
+    backdrop-filter: saturate(180%) blur(20px);
+    text-align: center;
+    padding: 130px 0 70px 0;
+}
+
+.adForm-container h1    {
+    font-size: 2rem;
+}
+
+.ad-text    {
+    margin: 15px 0;
+}
+
+.adForm {
+    display: flex;
+    flex-wrap: wrap;
+    align-content: center;
+    justify-content: space-between;
+    margin: 30px auto;
+    width: 700px;
+}
+
+.form-content   {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: center;
+    justify-content: space-between;
+}
+
+textarea { resize: vertical; font-family: inherit; }
+
+.adForm input, .adForm textarea, .adForm select   {
+    margin: 10px 0;
+    background-color: var(--darkmode-inputBgcolor);
+    color: var(--darkmode-lightcolor);
+    padding: 10px 15px;
+    width: 100%;
+    border-radius: 6px;
+    border: 1px solid hsla(0,0%,53.3%,.4);
+    font-size: 1.1rem;
+    font-weight: 300;
+}
+
+.ui-menu, .ui-menu-item, .ui-widget-content   {
+    background-color:   var(--darkmode-containerBg);
+    backdrop-filter: saturate(180%) blur(20px);
+    color: var(--darkmode-lightcolor);
+}
+
+.ui-menu .ui-menu-item-wrapper   {
+    padding: 10px 15px;
+}
+
+.ui-menu    {
+    max-height: 384px;
+    overflow: hidden;
+}
+
+.adForm input, .adForm select  {
+    height: 45px;
+}
+
+select optgroup[label="Kirayə"] {
+    background-color: rgba(0, 0, 0, 0.897);
+}
+select option {
+    background-color: rgba(0, 0, 0, 0.897);
+}
+
+.adBtn  {
+    background-color: var(--active-color) !important;
+    color: #fff !important;
+    cursor: pointer;
+}
+
+#id_isRent, #id_isFlat, #id_price, #id_bedroom_number, #id_area, #id_city {
+    width: 48%;
+}
+
+.img-label  {
+    width: 35%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+#id_image   {
+    width: 65%;
+}
+
+.error-text {
+    width: 100%;
+    text-align: left;
+    color: var(--error-color);
+    pointer-events: none;
+    transition: 0.3s ease;
+}
+
+
+/* adform section end */
+
+#map {
+    height: 500px;
+    width: 100%;
+    border-bottom-right-radius: 15px;
+    border: 1px solid transparent;
+  }
+
+.map-label  {
+    margin-top: 10px;
+    border-radius: 10px 10px 0 0;
+    padding: 10px;
+    color: #fff;
+    font-size: 20px;
+    background-color: var(--darkmode-inputBgcolor);
+    width: 100%;
+    font-weight: 400;
+}
+
+.mapBtn {
+    border: none;
+    outline: none;
+    background-color: rgb(150, 147, 147);
+    color: #fff;
+    font-weight: 400;
+    cursor: pointer;
+    padding: 15px 20px;
+    border-radius: 0 0 10px 10px;
+    margin-bottom: 10px;
+    transition: 0.2s ease;
+}

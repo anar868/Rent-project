@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% block body %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'rentApp1/ads.css' %}">
+<link rel="stylesheet" href="{% static 'rentApp1/starRating.css' %}">
+
+    
+<section class="adPage-section">
+    <div class="adVerify-section-container">
+        <div class="adVerify-section-container-2">
+            <a href="{% url 'ads' %}" id="titlePage">Elanlar</a>
+            <form method="GET" class="adVerify-search-box-container adFiltersForm">
+                <input type="text" {% if search_term %}value="{{search_term}}" {% endif %} name="q" class="adVerify-search-box" placeholder="ID № ilə axtar..."> 
+                <button type="submit" class="adVerify-search-icon-box">
+                    <i class="adVerify-search-icon">
+                        <i class="adVerify-search-icon-before"></i>
+                    </i>
+                </button>
+            </form>
+        </div>
+    </div>
+    <div class="adPage-container">
+    {% if message %}
+        <p class="ad-not-found">{{message}}</p>
+    {% endif %}
+    {% for post in elanlar %}
+        <a class="ad-container" href="/advertisements/{{post.id}}">
+            <div class="ad-img-container">
+            {% for image in post.image_album.image_set.all %}
+                <img class="ad-img" src="{{ image.image.url }}"/> 
+            {% endfor %}
+            </div>
+            <div class="ad-description">
+                <div class="ad-decription-container-1">
+                    <p class="ad-price">{{post.price}}<span class="price_tag"> AZN{% if post.isRent == "sale" %}{% else %}<span class="price_for">/{{ post.get_isRent_display }}{% endif %}&nbsp;{{post.get_isFlat_display}}</span></span></p>
+                    <p class="ad-city">{{post.city}}</p>
+                </div>
+                <ul class="ad-desc"><li class="ad-desc-1">{{post.bedroom_number}} otaqlı</li><li>{{ post.area }} m²</li></ul>
+                <p class="ad-address">{{post.address}}</p>
+                <div class="ad-decription-container-1">
+                    <small class="ad-rating">{% if post.comment_count != "0" %} {{post.rating}}<span class="star-rating"><div class="Stars" style="--rating: {{post.rating}};"></div></span> ({{ post.comment_count }} şərh){% else %}Dəyərləndirmə yoxdur{% endif %}</small>
+                    <small>№{{post.id}}</small>
+                    
+                </div>
+            </div>
+        </a>
+    {% endfor %}
+    </div>
+</section>
+<section class="adFilters">
+    <form method="GET" action="" class="adFiltersForm">
+        <select name="sort" id="id_sort" class="adFilter">
+            <option value="-updated_at" {% if sortBy == "-updated_at" %}selected{% endif %}>Ən yeni</option>
+            <option value="-price"{% if sortBy == "-price" %}selected{% endif %}>Qiymətə görə azalan</option>
+            <option value="price"{% if sortBy == "price" %}selected{% endif %}>Qiymətə görə artan</option>
+        </select>
+        <select name="isRent" id="id_isRent" class="adFilter">
+            <option  value="" disabled {% if selected_isRent == "" %}selected{% endif %}>Kirayə/Satış</option>
+            <option value="Daily" {% if selected_isRent == "Daily" %}selected{% endif %}>Günlük</option>
+            <option value="Monthly" {% if selected_isRent == "Monthly" %}selected{% endif %}>Aylıq</option>
+            <option value="sale" {% if selected_isRent == "sale" %}selected{% endif %}>Satış</option>
+        </select>
+        <select name="isFlat" id="id_isFlat" class="adFilter">
+            <option value="" disabled {% if selected_flat == "" %}selected{% endif %}>Bina/Həyət evi</option>
+            <option value="flat" {% if selected_flat == "flat" %}selected{% endif %}>Bina evi</option>
+            <option value="apartment" {% if selected_flat == "apartment" %}selected{% endif %}>Həyət evi</option>
+        </select>
+        <select name="city" id="id_city_select" class="adFilter">
+            <option value="" class="selected_city" disabled selected_value="{{selected_city}}" {% if selected_city == "" %}selected{% endif %}>Şəhər</option>
+        </select>
+        <div class="price-inputs-container">
+            <p class="price-title">Qiymət</p>
+            <div class="price-inputs-div">
+                <input type="number" name="min_price" placeholder="min" class="price_inputs" min="0" {% if min_price %}value="{{min_price}}" {% endif %}>
+                <div class="price-line"></div>
+                <input type="number" name="max_price" placeholder="max" class="price_inputs" min="0" {% if max_price %}value="{{max_price}}" {% endif %}>
+            </div>
+        </div>
+        <div class="price-inputs-container">
+            <p class="price-title">Otaq sayı</p>
+            <div class="price-inputs-div room-inputs-div">
+                <input type="number" name="min_room" placeholder="min" class="price_inputs room_inputs" min="0" {% if min_room %}value="{{min_room}}" {% endif %}>
+                <div class="price-line"></div>
+                <input type="number" name="max_room" placeholder="max" class="price_inputs room_inputs" min="0" {% if max_room %}value="{{max_room}}" {% endif %}>
+            </div>
+        </div>
+        <button type="submit" style="display: none;"></button>
+    </form>
+      
+</section>
+
+
+{% endblock %}

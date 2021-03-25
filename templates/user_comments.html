@@ -1,0 +1,70 @@
+{% extends 'profile.html' %}
+{% block body %}
+{% load static %}
+
+    
+<link rel="stylesheet" href="{% static 'rentApp1/admin_verify.css' %}">
+
+<section class="adVerify-section">
+    <div class="adVerify-section-container">
+        <div class="adVerify-section-container-2">
+            <h1 class="adVerify-section-title">Şərhləriniz</h1>
+           
+        </div>
+        <div class="adVerify-menu-container">
+            <a href="{% url 'user_waiting_comments' %}" class="adVerify-verify  {% if active == 'waiting' %}active{% endif %}">Gözlənilən</a>
+            <a href="{% url 'user_verified_comments' %}" class="adVerify-verified {% if active == 'verified' %}active{% endif %}">Təsdiqlənmiş</a>
+            <a href="{% url 'user_unverified_comments' %}" class="adVerify-deleted {% if active == 'unverified' %}active{% endif %}">Deaktiv</a>
+            <a href="{% url 'user_comments' %}" class="adVerify-all {% if active == 'all' %}active{% endif %}">Bütün</a>
+        </div>
+    </div>
+    <div class="adVerify-container">
+        {% if message %}
+            <p class="ad-not-found">{{message}}</p>
+        {% endif %}
+        {% for comment in comments %}
+        <div class="adVerify-ad-container">
+            <div class="adVerify-img-container">
+                {% if comment.image_album %}
+                    {% for image in comment.image_album.commentimage_set.all %}
+                        <img class="comment-img" src="{{ image.image.url }}"/> 
+                    {% endfor %}
+                    {% else %}
+                        <img class="comment-img" src="{% static 'rentApp1/media/image_placeholder.jpg' %}"/> 
+                {% endif %}
+            </div>
+            <div class="adVerify-content-container">
+                <h3 class="adVerify-ad-price">№:{{comment.id}}&nbsp; &nbsp;{{comment.title}}<small> {{comment.created_at}}</small></h3>
+                {% if not comment.not_accepted and comment.verified %}<span style="color: var(--success-color); font-weight: 600;">Aktiv</span>{% elif not comment.not_accepted and not comment.verified %}<span style="color: #fff;">Gözlənilir</span>{% elif comment.not_accepted and not comment.verified %}<span style="color: var(--error-color); font-weight: 400;">Təsdiqlənmədi</span>{% endif %}
+                <p class="adVerify-comment-no"><a href="/advertisements/{{comment.elan.id}}"> Elan №:{{comment.elan.id}} </a><span class="star-rating" rating="{{comment.rating}}"></span></p>
+                <p class="adVerify-comment-body">{{comment.body}}</p>
+            </div>
+            <form method="POST" class="adVerify-buttons-container">
+                {% csrf_token %}
+                <input type="hidden" name="post_id" value="{{comment.id}}">
+                <input type="submit" name="delete" value="Sil" class="adVerify-button adVerify-delete-button">
+            </form> 
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="adVerify-OK-section">
+    <div class="adVerify-OK-container">
+        <p class="adVerify-OK-container-text"></p>
+        <div class="adVerify-OK-buttons-container">
+            
+        </div>
+    </div>
+</section>
+
+<section class="comment-read-more-section">
+    <div class="comment-read-more-container">
+                <div class="forms-close-btn"></div>
+                <p class="comment-read-more-text"></p>
+    </div>
+</section>
+
+
+
+{% endblock %}

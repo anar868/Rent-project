@@ -1,0 +1,23 @@
+{% extends 'profile.html' %}
+{% block body %}
+{% load static %}
+
+    <section class="user-update-form-section">
+
+        <div class="user-update-form-container" style="display:flex; flex-direction: column; align-items: center;">
+            <h1>Məlumatlarınızı yeniləyin</h1>
+            <p class="log-text">Məlumatlarınız bizimlə tam güvəndədir</p>
+            <form method="post" action="{% url 'update_user' %}" class="userForm" enctype="multipart/form-data">
+                {% csrf_token %}
+                {% for field in form %}
+                {{ field }}
+                {{ field.errors }}
+                {% endfor %}
+                <input type="submit" name="userUpdate" value="Yadda saxla" class="userBtn">
+            </form>
+        </div>
+    </section>
+
+
+
+{% endblock %}

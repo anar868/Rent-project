@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block body %}
+    {% load static %}
+<link rel="stylesheet" href="{% static 'rentApp1/advertise.css' %}">
+
+    <section class="adForm-section">
+        <div class="adForm-container">
+            <h1>Elanı redaktə edin</h1>
+            <p class="log-text">Aşağıdakı formu tam düzgün şəkildə doldurun</p>
+            <form class="adForm" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {% for field in form %}
+                    {{ field }}
+                    {{ field.errors }}
+                {% endfor %}
+                <p class="ad-text">Təsdiqlə düyməsini basdıqdan sonra elan sayt rəhbərliyi tərəfindən təsdiq olunarsa yenidən yerləşdiriləcəkdir</p>
+                <input type="submit" value="Təsdiqlə" class="adBtn">
+            </form>
+        </div>
+    </section>
+
+
+{% endblock %}

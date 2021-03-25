@@ -1,0 +1,64 @@
+{% extends 'profile.html' %}
+{% block body %}
+{% load static %}
+
+    
+<link rel="stylesheet" href="{% static 'rentApp1/admin_verify.css' %}">
+
+<section class="adVerify-section">
+    <div class="adVerify-section-container">
+        <div class="adVerify-section-container-2">
+            <h1 class="adVerify-section-title">Elanlarınız</h1>
+            <form method="GET" class="adVerify-search-box-container">
+                <input type="text" name="q" class="adVerify-search-box" placeholder="Axtar..."> 
+                <button type="submit" class="adVerify-search-icon-box">
+                    <i class="adVerify-search-icon">
+                        <i class="adVerify-search-icon-before"></i>
+                    </i>
+                </button>
+            </form>
+        </div>
+        <div class="adVerify-menu-container">
+            <a href="{% url 'user_waiting_ads' %}" class="adVerify-verify {% if active == 'waiting' %}active{% endif %}">Gözlənilən</a>
+            <a href="{% url 'user_verified_ads' %}" class="adVerify-verified {% if active == 'verified' %}active{% endif %}">Təsdiqlənmiş</a>
+            <a href="{% url 'user_unverified_ads' %}" class="adVerify-deleted {% if active == 'unverified' %}active{% endif %}">Təsdiqlənməyən</a>
+            <a href="{% url 'user_listing' %}" class="adVerify-all {% if active == 'all' %}active{% endif %}">Bütün</a>
+        </div>
+    </div>
+    <div class="adVerify-container">
+        {% if message %}
+            <p class="ad-not-found">{{message}}</p>
+        {% endif %}
+        {% for post in listing %}
+        <div class="adVerify-ad-container">
+            <a href="{% if not post.not_accepted and post.verified  %}/advertisements/{{post.id}}{% else %}/profile/advertisements/{{post.id}}{% endif %}" class="adVerify-img-container">
+                
+            </a>
+            <a href="{% if not post.not_accepted and post.verified  %}/advertisements/{{post.id}}{% else %}/profile/advertisements/{{post.id}}{% endif %}" class="adVerify-content-container">
+                <h3 class="adVerify-ad-price"><span>№:{{post.id}}&nbsp; &nbsp;{{post.city}} {{post.price}}<span class="adVerify-ad-price-tag"> AZN{% if post.isRent == "sale" %}{% else %}<span class="adVerify-ad-price_for">/{{ post.get_isRent_display }}{% endif %}{% if post.isRent != 'sale' %} kirayə{% endif %}</span>&nbsp;{{post.get_isFlat_display}}</span></span<small>{{post.updated_at}}</small></h3>
+                <p class="adVerify-ad-title">{{post.title}}</p>
+                <p class="adVerify-ad-address">{{post.address}}{% if not post.not_accepted and post.verified %}<span style="color: var(--success-color); font-weight: 600;">Aktiv</span>{% elif not post.not_accepted and not post.verified %}<span style="color: #fff;">Gözlənilir</span>{% elif post.not_accepted and not post.verified %}<span style="color: var(--error-color); font-weight: 400;">Təsdiqlənmədi</span>{% endif %}</p>
+            </a>
+            <form method="POST" class="adVerify-buttons-container">
+                {% csrf_token %}
+                <input type="hidden" name="post_id" value="{{post.id}}">
+                <a href="/profile/advertisements/{{post.id}}/edit" class="adVerify-button adVerify-edit-button">Redaktə et</a>
+                <input type="submit" name="delete" value="Sil" class="adVerify-button adVerify-delete-button">
+            </form> 
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="adVerify-OK-section">
+    <div class="adVerify-OK-container">
+        <p class="adVerify-OK-container-text"></p>
+        <div class="adVerify-OK-buttons-container">
+            
+        </div>
+    </div>
+</section>
+
+
+
+{% endblock %}

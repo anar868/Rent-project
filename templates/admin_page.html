@@ -1,0 +1,23 @@
+{% extends 'profile.html' %}
+{% block body %}
+{% load static %}
+
+    
+<link rel="stylesheet" href="{% static 'rentApp1/admin_verify.css' %}">
+
+<div class="admin_button_container">
+    <a class="verify_ads_link admin_verify_buttons" href="{% url 'admin_verify_ads' %}">
+        <p>Elanlar</p> 
+    </a>
+        
+    <a class="verify_comments_link admin_verify_buttons" href="{% url 'admin_verify_comments' %}">
+        <p>Şərhlər</p> 
+    </a>
+
+    <a class="verify_users_link admin_verify_buttons" href="{% url 'admin_users_all' %}">
+        <p>Istifadəçilər</p> 
+    </a>
+</div>
+
+
+{% endblock %}

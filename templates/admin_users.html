@@ -1,0 +1,68 @@
+{% extends 'profile.html' %}
+{% block body %}
+{% load static %}
+
+    
+<link rel="stylesheet" href="{% static 'rentApp1/admin_verify.css' %}">
+
+    
+
+
+<section class="adVerify-section">
+    <div class="adVerify-section-container">
+        <div class="adVerify-section-container-2">
+            <h1 class="adVerify-section-title">Istifadəçilər</h1>
+            <form method="GET" class="adVerify-search-box-container">
+                <input type="text" name="q" class="adVerify-search-box" placeholder="Axtar..."> 
+                <button type="submit" class="adVerify-search-icon-box">
+                    <i class="adVerify-search-icon">
+                        <i class="adVerify-search-icon-before"></i>
+                    </i>
+                </button>
+            </form>
+        </div>
+    </div>
+    <div class="adVerify-container">
+        {% if message %}
+            <p class="ad-not-found">{{message}}</p>
+        {% endif %}
+        {% for user in users %}
+        <div class="adVerify-ad-container">
+            <div class="adVerify-img-container-user">
+                <img class="user-pfp" src="{% if user.pfp %}{{ user.pfp.url }}{% else %}{% static 'rentApp1/media/logicon.png' %}{% endif %}" />
+            </div>
+            <div class="adVerify-content-container">
+                <h3 class="adVerify-ad-price">{{user.username}}<small>Qoşulma tarixi: {{user.date_joined}}</small></h3>
+                <p class="adVerify-user-name">Ad: {{user.get_full_name}}</p>
+                <p class="adVerify-user-phone">Email: {{user.email}}</p>
+                <p class="adVerify-user-phone">Telefon: {{user.phone}}</p>
+                <p class="adVerify-user-phone">Son giriş: {{user.last_login}}</p>
+            </div>
+            <form method="POST" class="adVerify-buttons-container">
+                {% csrf_token %}
+                <input type="hidden" name="user_id" value="{{user.id}}">
+                {% if user.id == request.user.id %} 
+                <a href="{% url 'logout' %}" class="adVerify-button adVerify-delete-button">Çıxış</a>
+                {% else %}
+                    <input type="submit" name="delete" value="Sil" class="adVerify-button adVerify-delete-button">
+                {% endif %}
+            </form> 
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+
+
+<section class="adVerify-OK-section">
+    <div class="adVerify-OK-container">
+        <p class="adVerify-OK-container-text"></p>
+        <div class="adVerify-OK-buttons-container">
+            
+        </div>
+    </div>
+</section>
+
+
+
+{% endblock %}

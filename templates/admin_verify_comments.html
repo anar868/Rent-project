@@ -1,0 +1,95 @@
+{% extends 'profile.html' %}
+{% block body %}
+{% load static %}
+
+    
+<link rel="stylesheet" href="{% static 'rentApp1/starRating.css' %}">
+<link rel="stylesheet" href="{% static 'rentApp1/admin_verify.css' %}">
+
+<section class="adVerify-section">
+    <div class="adVerify-section-container">
+        <div class="adVerify-section-container-2">
+            <h1 class="adVerify-section-title">Şərhlər</h1>
+            <form method="GET" class="adVerify-search-box-container">
+                <input type="text" name="q" class="adVerify-search-box" placeholder="Axtar..."> 
+                <button type="submit" class="adVerify-search-icon-box">
+                    <i class="adVerify-search-icon">
+                        <i class="adVerify-search-icon-before"></i>
+                    </i>
+                </button>
+            </form>
+        </div>
+        <div class="adVerify-menu-container">
+            <!-- <a href="{% url 'admin_verify_comments' %}" class="adVerify-verify {% if active == 'verify' %}active{% endif %}">Gözlənilən</a>
+            <a href="{% url 'admin_verified_comments' %}" class="adVerify-verified {% if active == 'verified' %}active{% endif %}">Təsdiqlənmiş</a>
+            <a href="{% url 'admin_deleted_comments' %}" class="adVerify-deleted {% if active == 'deleted' %}active{% endif %}">Deaktiv</a>
+            <a href="{% url 'admin_comments_all' %}" class="adVerify-all {% if active == 'all' %}active{% endif %}">Bütün</a> -->
+            <select name="" id="" onchange="location = this.value;">
+                <option value="verify"  {% if active == 'verify' %}selected{% endif %}><a href="{% url 'admin_verify_comments' %}">Gözlənilən</a></option>
+                <option value="verified" {% if active == 'verified' %}selected{% endif %}><a href="{% url 'admin_verified_comments' %}">Təsdiqlənmiş</a></option>
+                <option value="deleted" {% if active == 'deleted' %}selected{% endif %}><a href="{% url 'admin_deleted_comments' %}" class="adVerify-deleted ">Deaktiv</a></option>
+                <option value="all" {% if active == 'all' %}selected{% endif %}><a href="{% url 'admin_comments_all' %}" class="adVerify-all">Bütün</a></option>
+            </select>
+        </div>
+    </div>
+    <div class="adVerify-container">
+        {% if message %}
+            <p class="ad-not-found">{{message}}</p>
+        {% endif %}
+        {% for comment in comments %}
+        <div class="adVerify-ad-container">
+            <div class="adVerify-img-container">
+                {% if comment.image_album %}
+                    {% for image in comment.image_album.commentimage_set.all %}
+                        <img class="comment-img" src="{{ image.image.url }}"/> 
+                    {% endfor %}
+                    {% else %}
+                        <img class="comment-img" src="{% static 'rentApp1/media/image_placeholder.jpg' %}"/> 
+                {% endif %}
+            </div>
+            <div class="adVerify-content-container">
+                <h3 class="adVerify-ad-price">№:{{comment.id}}&nbsp; &nbsp;{{comment.title}}<small> {{comment.created_at}}</small></h3>
+                <p class="adVerify-comment-no">{{comment.author.username}}</p>
+                <div class="adVerify-comment-no"><a href="/profile/admin/ads/{{comment.elan.id}}"> Elan №:{{comment.elan.id}}</a><span class="star-rating"><div class="Stars" style="--rating: {{comment.rating}};"></div></span></div>
+                <p class="adVerify-comment-body">{{comment.body}}</p>
+            </div>
+            <form method="POST" class="adVerify-buttons-container">
+                {% csrf_token %}
+                <input type="hidden" name="post_id" value="{{comment.id}}">
+                {% if not comment.verified and comment.not_accepted %}
+                <input type="submit" name="verify" value="Bərpa et" class="adVerify-button adVerify-verify-button">
+                <input type="submit" name="delete" value="Sil" class="adVerify-button adVerify-delete-button">
+                {% endif %}
+                {% if comment.verified and not comment.not_accepted %}
+                <input type="submit" name="cancel" value="Deaktiv et" class="adVerify-button adVerify-delete-button">
+                <input type="submit" name="delete" value="Sil" class="adVerify-button adVerify-delete-button">
+                {% endif %}
+                {% if not comment.verified and not comment.not_accepted %}
+                <input type="submit" name="verify" value="Təsdiqlə" class="adVerify-button adVerify-verify-button">
+                <input type="submit" name="cancel" value="Deaktiv et" class="adVerify-button adVerify-delete-button">
+                {% endif %}
+            </form> 
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="adVerify-OK-section">
+    <div class="adVerify-OK-container">
+        <p class="adVerify-OK-container-text"></p>
+        <div class="adVerify-OK-buttons-container">
+            
+        </div>
+    </div>
+</section>
+
+<section class="comment-read-more-section">
+    <div class="comment-read-more-container">
+                <div class="forms-close-btn"></div>
+                <p class="comment-read-more-text"></p>
+    </div>
+</section>
+
+
+
+{% endblock %}

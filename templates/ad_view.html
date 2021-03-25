@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block body %}
+{% load static %}  
+<link rel="stylesheet" href="{% static 'rentApp1/starRating.css' %}">
+<link rel="stylesheet" href="{% static 'rentApp1/ad_view.css' %}">
+    <section class="adViewSection">
+        <div class="adImgSection">
+            {% if request.path|slice:":14" == '/profile/admin' %}
+            <div class="adVerify-buttons-div">
+                <form method="POST" class="adVerify-buttons-container">
+                    {% csrf_token %}
+                    <input type="hidden" name="post_id" value="{{post.id}}">
+                    {% if not post.verified and post.not_accepted %}
+                    <input type="submit" name="verify" value="Bərpa et" class="adVerify-button adVerify-verify-button">
+                    <input type="submit" name="delete" value="Sil" class="adVerify-button adVerify-delete-button">
+                    {% endif %}
+                    {% if post.verified and not post.not_accepted %}
+                    <input type="submit" name="cancel" value="Deaktiv et" class="adVerify-button adVerify-delete-button">
+                    <input type="submit" name="delete" value="Sil" class="adVerify-button adVerify-delete-button">
+                    {% endif %}
+                    {% if not post.verified and not post.not_accepted %}
+                    <input type="submit" name="verify" value="Təsdiqlə" class="adVerify-button adVerify-verify-button">
+                    <input type="submit" name="cancel" value="Deaktiv et" class="adVerify-button adVerify-delete-button">
+                    {% endif %}
+                </form> 
+            </div>
+            {% endif %}
+            
+            {% for image in post.image_album.image_set.all %}
+            <img class="ad-img" src="{{ image.image.url }}"/> 
+            {% endfor %}
+        </div>
+        <div class="adInfoSection">
+            <div class="ad-upper">
+              <h2> {{post.price}}<small>AZN</small>{% if post.isRent == 'rent' %}/ay{%else%}{% endif %}{% if post.isRent == "sale" %}{% else %}<span class="price_for">/{{ post.get_isRent_display }}{% endif %}</span>
+                </h2>
+                <p class="post-date">Yenilənmə tarixi: {{post.updated_at}}</p>
+            </div>
+            <div class="ad-description">
+                <h1>{{post.title}}&nbsp;<!--  {{ post.id }} --></h1>
+                <ul class="desc-ul">
+                    <li>{{post.city}} şəhəri</li>
+                    <li>{{post.bedroom_number}} otaqlı</li>
+                    <li>{{post.get_isFlat_display}}</li>
+                    <li>{{ post.area }} m²</li>
+                </ul>
+                <p class="post-address">Ünvan: {{post.address}}</p>
+                <div class="post-description-container">
+                    <p class="post-description-button">Ətraflı bax<i class="ad-description-icon"></i></p>
+                    <div class="post-description-container-2">
+                        <p class="post-description">{{post.description}}</p> 
+                    </div>
+                </div>
+                <div class="contact-buttons">
+                    <!-- <p class="contact-desc">Əlaqə saxla</p> -->
+                    <a href="tel:{{ post.owner.phone }}" class="phone-button">Zəng et</a>
+                    <a href="mailto:{{post.owner.email}}" class="mail-button">Mail yaz</a>
+                </div>
+            </div>
+            <div id="map" lat="{{ post.location_lat }}" lng="{{post.location_lng}}"></div>
+            <div class="comments-section">
+                {% if request.user.is_authenticated %}
+                <form class="commentForm" method="post" enctype="multipart/form-data">
+                    <h1>Şərh yaz</h1>
+                    {% csrf_token %}
+                    {% for field in commentForm %}
+                        <label id="{{ field.auto_id }}_log_lable">
+                        {{ field }}
+                        </label>
+                    {% endfor %}
+                <input type="submit" value="Təsdiqlə" class="commentBtn">
+                </form>
+                {% else %}
+                <p class="comment-text-middle write-comment">Şərh yazın...</p>
+                {% endif %}
+                <div class="comments-container">
+                    {% if comments %}   
+                    <h1>Şərhlər</h1>
+                    {% for comment in comments %}
+                    <div class="comment-container">
+                        <div class="comment-pfp-container"> <img class="comment-pfp" src="{% if comment.author.pfp %}{{ comment.author.pfp.url }}{% else %}{% static 'rentApp1/media/logicon.png' %}{% endif %}" alt=""> </div>
+                        <div class="comment-right">
+                            <div class="comment-name"><p>{{ comment.author.username }}</p> <small>{{ comment.created_at }}</small></div>
+                            <div class="comment-title"><p>{{ comment.title }} </p> <span class="star-rating"><div class="Stars" style="--rating: {{comment.rating}};"></div></span></div>
+                            <div class="comment-body"><p class="comment-body-text">{{ comment.body }}</p></div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+
+    
+    <section class="adVerify-OK-section">
+        <div class="adVerify-OK-container">
+            <p class="adVerify-OK-container-text"></p>
+            <div class="adVerify-OK-buttons-container">
+                
+            </div>
+        </div>
+    </section>
+
+    <section class="comment-read-more-section">
+        <div class="comment-read-more-container">
+            <div class="forms-close-btn"></div>
+            <p class="comment-read-more-text"></p>
+        </div>
+    </section>
+    
+    
+{% endblock %}
